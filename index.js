@@ -29,7 +29,7 @@ server.get('/api/users', (req, res) => {
             res.status(200).json(users);
         })
         .catch(err => {
-            res.status(500).json({ error: 'Information about this user is not avalible'})
+            res.status(500).json({ error: 'Information about the users are not avalible'})
         });
 });
 
@@ -37,7 +37,7 @@ server.get('/api/users/:id', (req, res) => {
     const userId = req.params.id;
 
     if (!userId) {
-        res.status(404).json({ message: 'No user was found with this id'})
+        res.status(404).json({ message: `No user was found with the id ${userId}`})
     }
     db.findById(userId)
         .then(userId => {
@@ -48,7 +48,7 @@ server.get('/api/users/:id', (req, res) => {
         });
 });
 
-server.delete('api/user/:id', (req, res) => {
+server.delete('/api/users/:id', (req, res) => {
     const userId = req.params.id;
 
     db.remove(userId)
