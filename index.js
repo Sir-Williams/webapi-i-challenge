@@ -4,33 +4,24 @@ const db = require('./data/db.js');
 
 const server = express();
 
-server.get('/', (req, res) => {
-    console.log('inside get request')
-    res.send('<h1>Hi Lambda!</h1k>')
-});
+server.post('/api/users', (req, res) => {
+    const newPerson= req.body;
+    const { name, bio } =req.body;
 
-server.get('/users', (req, res) => {
-    const users = [
-        {
-            name: 'Sir',
-            bio: 'I like Naruto',
-            created_at: Date(),
-            updated_at: Date(),
-        },
-        {
-            name: 'Marc',
-            bio: 'I am very good at playing csgo',
-            created_at: Date(),
-            updated_at: Date(),
-        }
-    ];
-
-    res.status(200).json(users);
+    if (!name || !bio) {
+        res.status(400).json({error: 'You are required to insert "name" and "bio".'})
+    } else {
+        db.insert(newPerson)
+            .then(addedPerson => {
+                res.status(201).json(addedPerson)
+            })
+            .catch(err => { 
+                res.status(500).json({ error: 'Could not save this person to the list'})
+            })
+    }
 })
 
-server.post('/users', (req, res) => {
-    res.status(201).json({ url: '/users', operation: 'POST' })
-})
+
 
 server.listen(9090, () => {
     console.log('Listening to port 9090');
